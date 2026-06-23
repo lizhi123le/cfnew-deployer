@@ -3,6 +3,23 @@ const 兼容日期 = '2026-01-20';
 const 绑定名 = 'C';
 const 源码远程基础 = 'https://raw.githubusercontent.com/byJoey/cfnew/main';
 
+export default {
+  async fetch(request, env, ctx) {
+    const 路径 = new URL(request.url).pathname;
+    if (路径.startsWith('/api/')) {
+      const context = {
+        request,
+        env,
+        waitUntil: ctx?.waitUntil?.bind(ctx),
+        passThroughOnException: ctx?.passThroughOnException?.bind(ctx)
+      };
+      return request.method === 'POST' ? onRequestPost(context) : onRequest(context);
+    }
+    if (env?.ASSETS?.fetch) return env.ASSETS.fetch(request);
+    return new Response('Not Found', { status: 404 });
+  }
+};
+
 export async function onRequestPost(context) {
   try {
     const 数据 = await context.request.json().catch(() => ({}));

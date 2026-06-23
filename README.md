@@ -11,6 +11,19 @@ npm run deploy
 
 也可以把本仓库接到 Cloudflare Pages，构建输出目录填 `public`，无需构建命令。
 
+## Cloudflare 本地上传
+
+不要直接上传 GitHub 自动生成的源码 zip，也不要只上传 `public/` 目录；那样 `/api/*` 会 404。
+
+本地生成可上传资产包：
+
+```bash
+npm install
+npm run pack:upload
+```
+
+然后在 Cloudflare Pages 控制台上传 `deploy-panel-upload.zip`。这个 zip 根目录包含 `index.html`、`app.js`、`styles.css` 和 `_worker.js`，适配控制台本地上传。
+
 GitHub 自动部署需要在仓库 Secrets 配置：
 
 - `CLOUDFLARE_API_TOKEN`
